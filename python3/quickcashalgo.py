@@ -5,8 +5,10 @@ import math
 # testfile = 'qc_summary.csv'
 # testfile = 'qc_ausnzuscan4daysago.csv'
 # testfile = 'qc_ausnzuscan10daysago.csv'
-#testfile = 'qc_uk4daysago.csv'
-testfile = 'qc_ausnzuscanuk10daysago.csv'
+# testfile = '../qc_uk4daysago.csv'
+# testfile = '../qc_ausnzuscanuk10daysago.csv'
+# testfile = '../qc_ausnzuscanuk10daysago_nonexact.csv'
+testfile = '../qc_summary_nonexact.csv'
 
 
 def getQuickCash(total, numSuggestions=3, sortedDenomination=None):
@@ -91,12 +93,47 @@ def getQuickCash(total, numSuggestions=3, sortedDenomination=None):
 
     return quickcash
 
+def getQuickCashOld(total, numSuggestions=3, sortedDenomination=None):
+
+    if sortedDenomination is None:
+        sortedDenomination = [1, 5, 10, 20, 30, 40, 50, 100]
+
+    # insert the exact at the end because of largestDfactor calc in the end
+    quickcash = []
+
+    #the index of the next highest denomination without any combo
+    nextDidx = 0
+    i = 0
+    while i < len(sortedDenomination):
+        currD = sortedDenomination[i]
+        if currD > total:
+            nextDidx = i
+            break
+        i += 1
+
+
+    # ceil = math.ceil(tempTotal / 5) * 5
+    # quickcash.append(ceil)
+    # print(quickcash)
+    # now add all the next higher denominations left
+    while nextDidx < len(sortedDenomination) and len(quickcash) < numSuggestions:
+        next = sortedDenomination[nextDidx]
+
+        if next not in quickcash:
+            quickcash.append(next)
+
+        nextDidx += 1
+
+    #print(quickcash)
+
+    quickcash.insert(0, total)
+
+    return quickcash
+
 # print(getQuickCash(14))
 
+def runTest(func, totals, paids):
 
-if __name__ == '__main__':
-    totals = cu.getColumn(testfile, 'sale_total')
-    paids = cu.getColumn(testfile, 'amount')
     lines = len(totals)
 
     correct = 0
@@ -111,23 +148,66 @@ if __name__ == '__main__':
         currPaid = float(paids[i])
         currTotal = float(totals[i])
 
-        qcash = getQuickCash(currTotal)
+        qcash = func(currTotal)
 
         print(currTotal,currPaid, qcash)
 
         if currPaid in qcash:
             correct += 1
-        else:
-            wrongTotals.append(currTotal)
-            wrongPaids.append(currPaid)
-            wrongqc.append(qcash)
+        # else:
+        #     wrongTotals.append(currTotal)
+        #     wrongPaids.append(currPaid)
+        #     wrongqc.append(qcash)
 
         i += 1
 
-    print(correct)
-    print(correct/lines*100)
+    return (correct, i)
 
-    cu.writeListToCSV(output=zip(wrongTotals, wrongPaids, wrongqc), title='qcwrong', prefix='')
+if __name__ == '__main__':
+    # totals = cu.getColumn(testfile, 'sale_total')
+    # paids = cu.getColumn(testfile, 'amount')
+    # lines = len(totals)
+    #
+    # correct = 0
+    #
+    # wrongTotals = ['sale_total']
+    # wrongPaids = ['paid_amount']
+    # wrongqc = ['wrong_quickcash']
+    #
+    #
+    # i = 0
+    # while i < lines:
+    #     currPaid = float(paids[i])
+    #     currTotal = float(totals[i])
+    #
+    #     qcash = getQuickCash(currTotal)
+    #
+    #     print(currTotal,currPaid, qcash)
+    #
+    #     if currPaid in qcash:
+    #         correct += 1
+    #     # else:
+    #     #     wrongTotals.append(currTotal)
+    #     #     wrongPaids.append(currPaid)
+    #     #     wrongqc.append(qcash)
+    #
+    #     i += 1
+
+    totals = cu.getColumn(testfile, 'sale_total')
+    paids = cu.getColumn(testfile, 'amount')
+
+    newAlgo = runTest(getQuickCash, totals, paids)
+    oldAlgo = runTest(getQuickCashOld, totals, paids)
+
+    print(testfile)
+    print(f'Old: {oldAlgo[0]} / {oldAlgo[1]}: {oldAlgo[0]/oldAlgo[1] * 100}')
+    print(f'New: {newAlgo[0]} / {newAlgo[1]}: {newAlgo[0]/newAlgo[1] * 100}')
+
+
+    # print(correct, " / ", i)
+    # print(correct/lines*100)
+
+    #cu.writeListToCSV(output=zip(wrongTotals, wrongPaids, wrongqc), title='qcwrong', prefix='')
 
 '''
     - needs to check the next combo (not just next highest denomination)
