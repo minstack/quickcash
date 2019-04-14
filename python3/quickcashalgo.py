@@ -43,12 +43,15 @@ def getQuickCash(total, numSuggestions=3, sortedDenomination=None):
     # previous denomination that is less than total, since it's sorted
     prevD = nextDidx - 1
 
+    if prevD < 0:
+        prevD = 0
+
     # use the lowest denomination to keep adding to the combo until it is
     # greater than the amount.  the lowest should be a factor of any greater
     # denomination so the combo suggestion will include combinations that may
     # consist of other denominations higher than the lowest
     combo = sortedDenomination[prevD]
-    smart = round(combo + (tempTotal % 10), 2)
+    # smart = round(combo + (tempTotal % 10), 2)
     exact = False
     # combo = math.floor(tempTotal) + sortedDenomination[0]
     #
