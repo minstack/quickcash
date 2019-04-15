@@ -2,13 +2,21 @@ import CsvUtil as cu
 import math
 
 # testfile = 'quickcash_threecountries.csv'
-# testfile = 'qc_summary.csv'
+#testfile = 'qc_summary.csv'
 # testfile = 'qc_ausnzuscan4daysago.csv'
-# testfile = 'qc_ausnzuscan10daysago.csv'
+#testfile = 'qc_ausnzuscan10daysago.csv'
 # testfile = '../qc_uk4daysago.csv'
 # testfile = '../qc_ausnzuscanuk10daysago.csv'
-# testfile = '../qc_ausnzuscanuk10daysago_nonexact.csv'
-testfile = '../qc_summary_nonexact.csv'
+#testfile = 'qc_ausnzuscanuk10daysago_nonexact.csv'
+# testfile = 'qc_summary_nonexact.csv'
+# testfile = 'qc_ausnzuscan4daysago_nonexact.csv'
+# testfile = 'qc_ausnzuscan10daysago_nonexact.csv'
+testfiles = [
+    'qc_summary_nonexact.csv',
+    'qc_ausnzuscan4daysago_nonexact.csv',
+    'qc_ausnzuscan10daysago_nonexact.csv',
+    'qc_ausnzuscanuk10daysago_nonexact.csv'
+]
 
 
 def getQuickCash(total, numSuggestions=3, sortedDenomination=None):
@@ -135,7 +143,7 @@ def getQuickCashOld(total, numSuggestions=3, sortedDenomination=None):
 
 # print(getQuickCash(14))
 
-def runTest(func, totals, paids):
+def runTest(func, totals, paids, numSuggestions=3, sortedDenom=[]):
 
     lines = len(totals)
 
@@ -151,7 +159,7 @@ def runTest(func, totals, paids):
         currPaid = float(paids[i])
         currTotal = float(totals[i])
 
-        qcash = func(currTotal)
+        qcash = func(currTotal, numSuggestions=numSuggestions, sortedDenomination=sortedDenom)
 
         print(currTotal,currPaid, qcash)
 
@@ -195,20 +203,50 @@ if __name__ == '__main__':
     #     #     wrongqc.append(qcash)
     #
     #     i += 1
+    # testfile = 'quickcash_threecountries.csv'
+    #testfile = 'qc_summary.csv'
+    # testfile = 'qc_ausnzuscan4daysago.csv'
+    #testfile = 'qc_ausnzuscan10daysago.csv'
+    # testfile = '../qc_uk4daysago.csv'
+    # testfile = '../qc_ausnzuscanuk10daysago.csv'
+    # testfile = 'qc_summary_nonexact.csv'
+    # testfile = 'qc_ausnzuscan4daysago_nonexact.csv'
+    # testfile = 'qc_ausnzuscan10daysago_nonexact.csv'
+    # testfile = 'qc_ausnzuscanuk10daysago_nonexact.csv'
 
-    totals = cu.getColumn(testfile, 'sale_total')
-    paids = cu.getColumn(testfile, 'amount')
+    # testfiles = [
+    #     'qc_summary_nonexact.csv',
+    #     'qc_ausnzuscan4daysago_nonexact.csv',
+    #     'qc_ausnzuscan10daysago_nonexact.csv',
+    #     'qc_ausnzuscanuk10daysago_nonexact.csv'
+    # ]
 
-    newAlgo = runTest(getQuickCash, totals, paids)
-    oldAlgo = runTest(getQuickCashOld, totals, paids)
+    results = []
 
-    print(testfile)
-    print(f'Old: {oldAlgo[0]} / {oldAlgo[1]}: {oldAlgo[0]/oldAlgo[1] * 100}')
-    print(f'New: {newAlgo[0]} / {newAlgo[1]}: {newAlgo[0]/newAlgo[1] * 100}')
+    for testfile in testfiles:
+
+        totals = cu.getColumn(testfile, 'sale_total')
+        paids = cu.getColumn(testfile, 'amount')
+
+        denomination = [1, 5, 10, 20, 40, 50, 60, 80, 100]
+
+        newAlgo3 = runTest(getQuickCash, totals, paids, numSuggestions=3, sortedDenom=denomination)
+        newAlgo2 = runTest(getQuickCash, totals, paids, numSuggestions=2, sortedDenom=denomination)
+        oldAlgo = runTest(getQuickCashOld, totals, paids, sortedDenom=[1, 5, 10, 20, 30, 40, 50, 100])
+
+        result =[]
+        result.append(testfile)
+        result.append(f'Old:\t{oldAlgo[0]} / {oldAlgo[1]} = {oldAlgo[0]/oldAlgo[1] * 100}')
+        result.append(f'New 2:\t{newAlgo2[0]} / {newAlgo2[1]} = {newAlgo2[0]/newAlgo2[1] * 100}\tDenominations:\t{denomination}')
+        result.append(f'New 3:\t{newAlgo3[0]} / {newAlgo3[1]} = {newAlgo3[0]/newAlgo3[1] * 100}\tDenominations:\t{denomination}')
+
+        results.append(result)
 
 
-    # print(correct, " / ", i)
-    # print(correct/lines*100)
+    for r in results:
+        for line in r:
+            print(line)
+        print()
 
     #cu.writeListToCSV(output=zip(wrongTotals, wrongPaids, wrongqc), title='qcwrong', prefix='')
 
