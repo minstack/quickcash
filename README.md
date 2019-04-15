@@ -66,7 +66,8 @@ I modified the datasets to only include records where `amount - sale_total > 0`.
 The following raw test outputs will include results of the old, new with max 2 sugguestions and new with max 3 suggestions (exluding exact amount). The results are sectioned by the different denomination lists I tested.
 
 #### [1, 5, 10, 20, 50, 100]
-```qc_summary_nonexact.csv
+```
+qc_summary_nonexact.csv
 Old:	30970 / 43190 = 71.70641352164853
 New 2:	29542 / 43190 = 68.40009261403102	Denominations:	[1, 5, 10, 20, 50, 100]
 New 3:	34978 / 43190 = 80.9863394304237	Denominations:	[1, 5, 10, 20, 50, 100]
