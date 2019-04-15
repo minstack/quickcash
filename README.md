@@ -46,7 +46,7 @@ Although the initial intent was to have custom lists of denominations to be pass
 
 A bank note of 40 does not exist in any major country/region Vend is used in (US, Canada, Australia, New Zealand, UK). But because this implementation (currently) does not account for multiples of the same bill (total: 38.8, paid: 40 (20 x 2)), it was added after looking at the failed suggestions. Simply adding 40 into the list of 'denominations' increased the accuracy significantly.
 
-The intention of using custom lists of denominations corresponding to the country/region may not be necessary in the end but the ability to pass different lists of denominations will be better better for refactoring (probably).
+The intention of using custom lists of denominations corresponding to the country/region may not be necessary in the end but the ability to pass different lists of denominations will be better (probably).
 
 ## Test Results
 The following initial tests were done with the dataset pulled - this includes all cash transactions (see raw test results that only include non-exact amounts).
