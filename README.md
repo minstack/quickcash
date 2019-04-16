@@ -47,7 +47,8 @@ The current algorithm maxes out suggestions where the total is greater than $200
 Although the initial intent was to have custom lists of denominations to be passed to the algorithm, initial testings show that the list `[1, 5, 10, 20, 40, 50, 100]` has the best results with the data available. Test results will be included in the following section but I will explain why I added 40 to the list.
 
 A bank note of 40 does not exist in any major country/region Vend is used in (US, Canada, Australia, New Zealand, UK). But because this implementation (currently) does not account for multiples of the same bill (total: 38.8, paid: 40 (20 x 2)), it was added after looking at the failed suggestions. Simply adding 40 into the list of 'denominations' increased the accuracy significantly.
-UPDATE: as seen in the test results adding both 40,60 increased it but not by a lot (for the largest dataset).
+
+**UPDATE: as seen in the test results adding both 40,60 increased it but not by a lot (for the largest dataset).**
 
 The intention of using custom lists of denominations corresponding to the country/region may not be necessary in the end but the ability to pass different lists of denominations will be better (probably).
 
