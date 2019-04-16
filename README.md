@@ -6,6 +6,7 @@ This is my attempt at trying to increase that accuracy to around ~80%. The follo
 
 The old and new algorithms implemented in python does not use any rounding rules. It assumes that the total provided is the final amount.
 
+
 ### TL;DR 
 New algorithm is more accurate but is incomplete to my initial intention of using the heuristic approach - paying based on denonimation. Why? Because the algorithm does not implement multiples of bills ($20 * n). Adding these multiples in the denomination list did increase the accuracy without increasing the complexity of the algorithm. 
 
@@ -45,6 +46,7 @@ The current algorithm maxes out suggestions where the total is greater than $200
 Although the initial intent was to have custom lists of denominations to be passed to the algorithm, initial testings show that the list `[1, 5, 10, 20, 40, 50, 100]` has the best results with the data available. Test results will be included in the following section but I will explain why I added 40 to the list.
 
 A bank note of 40 does not exist in any major country/region Vend is used in (US, Canada, Australia, New Zealand, UK). But because this implementation (currently) does not account for multiples of the same bill (total: 38.8, paid: 40 (20 x 2)), it was added after looking at the failed suggestions. Simply adding 40 into the list of 'denominations' increased the accuracy significantly.
+UPDATE: as seen in the test results adding both 40,60 increased it but not by a lot (for the largest dataset).
 
 The intention of using custom lists of denominations corresponding to the country/region may not be necessary in the end but the ability to pass different lists of denominations will be better (probably).
 
@@ -131,3 +133,9 @@ Old:	252582 / 388624 = 64.99392729218988
 New 2:	260319 / 388624 = 66.9847976450245	Denominations:	[1, 5, 10, 20, 40, 50, 60, 100]
 New 3:	307452 / 388624 = 79.11297295071843	Denominations:	[1, 5, 10, 20, 40, 50, 60, 100]
 ```
+## Running Test
+1. Download/clone
+2. Install python3 (python 3.7 used in testing)
+3. Download CSVs into same folder (python3) - `sale_total` and `amount` columns must be present
+4. Edit the `test.json` file with the list of test filenames and lists of denominations
+5. python3 test_quickcashalgo.py
