@@ -1,22 +1,4 @@
-import CsvUtil as cu
 import math
-
-# testfile = 'quickcash_threecountries.csv'
-#testfile = 'qc_summary.csv'
-# testfile = 'qc_ausnzuscan4daysago.csv'
-#testfile = 'qc_ausnzuscan10daysago.csv'
-# testfile = '../qc_uk4daysago.csv'
-# testfile = '../qc_ausnzuscanuk10daysago.csv'
-#testfile = 'qc_ausnzuscanuk10daysago_nonexact.csv'
-# testfile = 'qc_summary_nonexact.csv'
-# testfile = 'qc_ausnzuscan4daysago_nonexact.csv'
-# testfile = 'qc_ausnzuscan10daysago_nonexact.csv'
-testfiles = [
-    'qc_summary_nonexact.csv',
-    'qc_ausnzuscan4daysago_nonexact.csv',
-    'qc_ausnzuscan10daysago_nonexact.csv',
-    'qc_ausnzuscanuk10daysago_nonexact.csv'
-]
 
 
 def getQuickCash(total, numSuggestions=3, sortedDenomination=None):
@@ -143,117 +125,13 @@ def getQuickCashOld(total, numSuggestions=3, sortedDenomination=None):
 
 # print(getQuickCash(14))
 
-def runTest(func, totals, paids, numSuggestions=3, sortedDenom=[]):
-
-    lines = len(totals)
-
-    correct = 0
-
-    wrongTotals = ['sale_total']
-    wrongPaids = ['paid_amount']
-    wrongqc = ['wrong_quickcash']
-
-
-    i = 0
-    while i < lines:
-        currPaid = float(paids[i])
-        currTotal = float(totals[i])
-
-        qcash = func(currTotal, numSuggestions=numSuggestions, sortedDenomination=sortedDenom)
-
-        print(currTotal,currPaid, qcash)
-
-        if currPaid in qcash:
-            correct += 1
-        # else:
-        #     wrongTotals.append(currTotal)
-        #     wrongPaids.append(currPaid)
-        #     wrongqc.append(qcash)
-
-        i += 1
-
-    return (correct, i)
-
-if __name__ == '__main__':
-    # totals = cu.getColumn(testfile, 'sale_total')
-    # paids = cu.getColumn(testfile, 'amount')
-    # lines = len(totals)
-    #
-    # correct = 0
-    #
-    # wrongTotals = ['sale_total']
-    # wrongPaids = ['paid_amount']
-    # wrongqc = ['wrong_quickcash']
-    #
-    #
-    # i = 0
-    # while i < lines:
-    #     currPaid = float(paids[i])
-    #     currTotal = float(totals[i])
-    #
-    #     qcash = getQuickCash(currTotal)
-    #
-    #     print(currTotal,currPaid, qcash)
-    #
-    #     if currPaid in qcash:
-    #         correct += 1
-    #     # else:
-    #     #     wrongTotals.append(currTotal)
-    #     #     wrongPaids.append(currPaid)
-    #     #     wrongqc.append(qcash)
-    #
-    #     i += 1
-    # testfile = 'quickcash_threecountries.csv'
-    #testfile = 'qc_summary.csv'
-    # testfile = 'qc_ausnzuscan4daysago.csv'
-    #testfile = 'qc_ausnzuscan10daysago.csv'
-    # testfile = '../qc_uk4daysago.csv'
-    # testfile = '../qc_ausnzuscanuk10daysago.csv'
-    # testfile = 'qc_summary_nonexact.csv'
-    # testfile = 'qc_ausnzuscan4daysago_nonexact.csv'
-    # testfile = 'qc_ausnzuscan10daysago_nonexact.csv'
-    # testfile = 'qc_ausnzuscanuk10daysago_nonexact.csv'
-
-    # testfiles = [
-    #     'qc_summary_nonexact.csv',
-    #     'qc_ausnzuscan4daysago_nonexact.csv',
-    #     'qc_ausnzuscan10daysago_nonexact.csv',
-    #     'qc_ausnzuscanuk10daysago_nonexact.csv'
-    # ]
-
-    results = []
-
-    for testfile in testfiles:
-
-        totals = cu.getColumn(testfile, 'sale_total')
-        paids = cu.getColumn(testfile, 'amount')
-
-        denomination = [1, 5, 10, 20, 40, 50, 60, 80, 100]
-
-        newAlgo3 = runTest(getQuickCash, totals, paids, numSuggestions=3, sortedDenom=denomination)
-        newAlgo2 = runTest(getQuickCash, totals, paids, numSuggestions=2, sortedDenom=denomination)
-        oldAlgo = runTest(getQuickCashOld, totals, paids, sortedDenom=[1, 5, 10, 20, 30, 40, 50, 100])
-
-        result =[]
-        result.append(testfile)
-        result.append(f'Old:\t{oldAlgo[0]} / {oldAlgo[1]} = {oldAlgo[0]/oldAlgo[1] * 100}')
-        result.append(f'New 2:\t{newAlgo2[0]} / {newAlgo2[1]} = {newAlgo2[0]/newAlgo2[1] * 100}\tDenominations:\t{denomination}')
-        result.append(f'New 3:\t{newAlgo3[0]} / {newAlgo3[1]} = {newAlgo3[0]/newAlgo3[1] * 100}\tDenominations:\t{denomination}')
-
-        results.append(result)
-
-
-    for r in results:
-        for line in r:
-            print(line)
-        print()
-
-    #cu.writeListToCSV(output=zip(wrongTotals, wrongPaids, wrongqc), title='qcwrong', prefix='')
-
 '''
     - needs to check the next combo (not just next highest denomination)
     -- add that to the list for the first suggestion (apart from the exact)
     - then the next highest actual denomination
     -- repeat till 3 suggestions filled
+    "qc_summary_nonexact.csv",
+"qc_ausnzuscan4daysago_nonexact.csv",
+"qc_ausnzuscan10daysago_nonexact.csv",
 
 '''

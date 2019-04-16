@@ -1,0 +1,12 @@
+{
+  "testfiles" :[
+      "qc_summary_nonexact.csv",
+      "qc_ausnzuscan4daysago_nonexact.csv",
+      "qc_ausnzuscan10daysago_nonexact.csv",
+      "qc_ausnzuscanuk10daysago_nonexact.csv"
+  ],
+  "denominations":[
+    [1, 5, 10, 20, 50, 100],
+    [1, 5, 10, 20, 40, 50, 100]
+  ]
+}
