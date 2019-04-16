@@ -6,9 +6,10 @@ This is my attempt at trying to increase that accuracy to around ~80%. The follo
 
 The old and new algorithms implemented in python does not use any rounding rules. It assumes that the total provided is the final amount.
 
-
 ### TL;DR 
 New algorithm is more accurate but is incomplete to my initial intention of using the heuristic approach - paying based on denonimation. Why? Because the algorithm does not implement multiples of bills ($20 * n). Adding these multiples in the denomination list did increase the accuracy without increasing the complexity of the algorithm. 
+
+**[Go to testing instructions](#running-tests)**
 
 ## Approach
 Using the sample size of around 68K records of sales, I initially attempted to find any patterns by doing some calculations on the `sale_total` and `amount` paid without any progress.
@@ -133,9 +134,9 @@ Old:	252582 / 388624 = 64.99392729218988
 New 2:	260319 / 388624 = 66.9847976450245	Denominations:	[1, 5, 10, 20, 40, 50, 60, 100]
 New 3:	307452 / 388624 = 79.11297295071843	Denominations:	[1, 5, 10, 20, 40, 50, 60, 100]
 ```
-## Running Test
+## Running Tests
 1. Download/clone
 2. Install python3 (python 3.7 used in testing)
 3. Download CSVs into same folder (python3) - `sale_total` and `amount` columns must be present
-4. Edit the `test.json` file with the list of test filenames and lists of denominations
+4. Edit the `test.json` file with the list of test (CSV) filenames and lists of denominations
 5. python3 test_quickcashalgo.py
